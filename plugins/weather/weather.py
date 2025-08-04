@@ -25,8 +25,11 @@ class WeatherPlugin(Plugin):
 
     def getWeather(self, query=None):
         if query: queryParts = self.queryParse(query)
-        else: queryParts = ["tokyo"]
+        else: queryParts = ["japan","tokyo"]
+
+        partJoined = "+".join(queryParts[1:])
+        queryPartsCopy = [queryParts[0], partJoined]
 
         # Assume queryParts[0] is the city. Ignore the rest. Trust in the user.
-        response = requests.get(f"http://wttr.in/{queryParts[0]}?format=3")
+        response = requests.get(f"{self.api}{queryPartsCopy[0]}/{queryPartsCopy[1]}?format=3")
         print(response.text.strip())

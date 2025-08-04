@@ -52,6 +52,7 @@
     "arguments": {
       "pluginName": "WeatherPlugin",
       "pluginDesc": "Get your weather with this simple command! Note: you must have queries with | to a city. Incorrect cities may still give a response.",
+      "api": "http://wttr.in/",
       "pluginTags": [
         "utility",
         "weather"
