@@ -33,70 +33,87 @@ class QuotesPlugin(Plugin):
             with open(filepath, "r", encoding="utf-8") as f:
                 self.quotes[key] = json.load(f)
 
-    def generateQuote(self, query):
+    def generateQuote(self, query=None):
+        if query is None:
+            print("Expected query!")
+            return
+
         amount = 1
         character = None
         tags = None
 
-        parts = self.queryParse(query)
+        found = False
+        if query in self.characterStart: found = True
 
-        if parts[0] == "check":
-            amountFound = {}
-            for tag in parts[1:]:
-                for character in self.quotes:
-                    if tag not in amountFound:
-                        amountFound[tag] = {}
-                    amountFound[tag][character] = 0
-                    for key, value in self.quotes[character].items():
-                        if tag in value["tags"]:
-                            amountFound[tag][character] = amountFound[tag][character] + 1
+        parts = self.queryParse(query) if not found else None
 
-                for character, amount in amountFound[tag].items():
-                    print(f"{self.characterStart[character]} has {amount} quotes with tag {tag}.")
-            return
-        if parts[0] == "analysis":
+        if parts is not None:
+            if parts[0] == "check":
+                amountFound = {}
+                for tag in parts[1:]:
+                    for character in self.quotes:
+                        if tag not in amountFound:
+                            amountFound[tag] = {}
+                        amountFound[tag][character] = 0
+                        for key, value in self.quotes[character].items():
+                            if tag in value["tags"]:
+                                amountFound[tag][character] = amountFound[tag][character] + 1
+
+                    for character, amount in amountFound[tag].items():
+                        print(f"{self.characterStart[character][0]} has {amount} quotes with tag {tag}.")
+                return
+            if parts[0] == "analysis":
+                if len(parts) >= 2 and parts[1] in self.characterStart:
+                    character = parts[1]
+                elif len(parts) >= 2 and parts[1] not in self.characterStart:
+                    tags = parts[1:]
+
+                if len(parts) >= 3 and parts[2] not in self.characterStart:
+                    tags = parts[2:]
+
+                chosenChar = character or choice(list(self.quotes.keys()))
+                quotePool = list(self.quotes[chosenChar].keys())
+
+                if tags:
+                    filteredQuotes = []
+                    for key, value in self.quotes[chosenChar].items():
+                        if any(tag in value["tags"] for tag in tags):
+                            filteredQuotes.append(key)
+
+                    if not filteredQuotes:
+                        print(f"Filtered quotes for {chosenChar} (using tags {tags}) is empty.")
+                        return
+
+                    quotePool = filteredQuotes
+
+                chosenQuote = choice(quotePool)
+                analysis = self.quotes[chosenChar][chosenQuote]['analysis']
+                tags = self.quotes[chosenChar][chosenQuote]['tags']
+
+                print(f"{self.characterStart[chosenChar][0]} says:\n\"{chosenQuote}\"\nAnalysis: {analysis}")
+                print("Tags:")
+                for tag in tags: print(f"- {tag}")
+                return
+
+            if parts[0].isdigit():
+                amount = int(parts[0])
+
             if len(parts) >= 2 and parts[1] in self.characterStart:
                 character = parts[1]
+
             elif len(parts) >= 2 and parts[1] not in self.characterStart:
                 tags = parts[1:]
-
-            if len(parts) >= 3 and parts[2] in self.characterStart:
+            if len(parts) >= 3 and parts[2] not in self.characterStart:
                 tags = parts[2:]
 
-            chosenChar = character or choice(list(self.quotes.keys()))
-            quotePool = list(self.quotes[chosenChar].keys())
+        if parts is None or len(parts) == 0:
+            if query in self.characterStart:
+                character = query
 
-            if tags:
-                filteredQuotes = []
-                for key, value in self.quotes[chosenChar].items():
-                    if any(tag in value["tags"] for tag in tags):
-                        filteredQuotes.append(key)
-
-                if not filteredQuotes:
-                    print(f"Filtered quotes for {chosenChar} (using tags {tags}) is empty.")
-                    return
-
-                quotePool = filteredQuotes
-
-            chosenQuote = choice(quotePool)
-            analysis = self.quotes[chosenChar][chosenQuote]['analysis']
-            tags = self.quotes[chosenChar][chosenQuote]['tags']
-
-            print(f"{self.characterStart[chosenChar]} says:\n\"{chosenQuote}\"\nAnalysis: {analysis}")
-            print("Tags:")
-            for tag in tags: print(f"- {tag}")
+        if parts is None and character:
+            quotePool = list(self.quotes[character].keys())
+            print(f"{self.characterStart[character][0]} says:\n\"{choice(quotePool)}\"")
             return
-
-        if parts[0].isdigit():
-            amount = int(parts[0])
-
-        if len(parts) >= 2 and parts[1] in self.characterStart:
-            character = parts[1]
-        elif len(parts) >= 2 and parts[1] not in self.characterStart:
-            tags = parts[1:]
-
-        if len(parts) >= 3 and parts[2] in self.characterStart:
-            tags = parts[2:]
 
         for _ in range(amount):
             if character:
@@ -114,7 +131,7 @@ class QuotesPlugin(Plugin):
 
                     quotePool = filteredQuotes
 
-                print(f"{self.characterStart[character]} says:\n\"{choice(quotePool)}\"")
+                print(f"{self.characterStart[character][0]} says:\n\"{choice(quotePool)}\"")
 
             else:
                 chosenChar = character or choice(list(self.quotes.keys()))
@@ -132,4 +149,4 @@ class QuotesPlugin(Plugin):
 
                     quotePool = filteredQuotes
 
-                print(f"{self.characterStart[chosenChar]} says:\n\"{choice(quotePool)}\"")
+                print(f"{self.characterStart[chosenChar][0]} says:\n\"{choice(quotePool)}\"")

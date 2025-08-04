@@ -65,5 +65,43 @@
         "sunny"
       ]
     }
+  },
+  "mathsPlugin": {
+    "filename": "calculator",
+    "pluginName": "CalculatorPlugin",
+    "arguments": {
+      "pluginName": "CalculatorPlugin",
+      "pluginDesc": "Calculator. Nothing more to it. Yet.",
+      "api": "",
+      "pluginTags": [
+        "utility",
+        "maths",
+        "school"
+      ],
+      "triggerWords": [
+        "math",
+        "maths",
+        "mathematics",
+        "trigonometry",
+        "trig",
+        "quadratics",
+        "calculus"
+      ]
+    }
+  },
+  "welcomePlugin": {
+    "filename": "welcome",
+    "pluginName": "WelcomeSequence",
+    "arguments": {
+      "pluginName": "WelcomeSequence",
+      "pluginDesc": "Spice up your launch with this sequence. That welcomes you. I hope.",
+      "api": "",
+      "pluginTags": [
+        "fun",
+        "joke",
+        "noTriggers"
+      ],
+      "triggerWords": []
+    }
   }
 }

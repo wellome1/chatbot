@@ -1,0 +1,31 @@
+{
+  "quadratic": {
+    "triggers": [
+      "quadratic",
+      "quadratic equation",
+      "quadratic formula"
+    ],
+    "steps": [
+      "Compute discriminant: {b}² - 4{a}{c}",
+      "Compute square root of {theDiscriminant}",
+      "Compute (-{b} + √{theDiscriminant}) / 2{a}",
+      "Compute (-{b} - √{theDiscriminant}) / 2{a}"
+    ],
+    "command": "quadraticEquation"
+  },
+  "sineRuleAngle": {
+    "triggers": [
+      "sine angle",
+      "sin angle",
+      "arcsin"
+    ],
+    "steps": [
+      "Convert Angle A ({a}) to Radians",
+      "Compute sin(A): sin({a})",
+      "Compute (b * sin(A)) / a → ({b} * sin({a})) / {c}",
+      "Compute arcsin(value) to get Angle B",
+      "Convert Angle B to Degrees"
+    ],
+    "command": "sineRuleAngle"
+  }
+}

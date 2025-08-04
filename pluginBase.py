@@ -65,7 +65,8 @@ class Plugin:
                  triggerWords:list[str],
                  api,
                  function=None,
-                 overwrite=False
+                 overwrite=False,
+                 startBoot = None
         ):
 
         self.pluginName = pluginName
@@ -75,6 +76,8 @@ class Plugin:
         self.loweredTriggers = {trigger.lower() for trigger in triggerWords}
         self.api = api
         self.function = function if function is not None else self.functionNotImplemented
+
+        self.startBoot = startBoot if startBoot is not None else False
 
         self.register(overwrite)
 
@@ -95,7 +98,7 @@ class Plugin:
     def handle(self, query=None, queryHandle=False):
         if self.function:
             if queryHandle and query is not None:
-                return self.function(query)
+                return self.function(query=query)
             else: return self.function()
         else:
             raise NotImplementedError("This is a weird bug. How did you manage this ???")
@@ -109,5 +112,19 @@ class Plugin:
             raise ValueError("How... How did you manage THIS???")
 
     def queryParse(self, query):
-        query = re.findall(r'\b\w+\b', query.lower())
-        return query
+        queryList = []
+
+        if isinstance(query, list):
+            parts = query
+        else:
+            parts = re.split(r'[,\s]+', query.lower())
+
+        for part in parts:
+            if part.isdigit():
+                queryList.append(part)
+                continue
+            tokens = re.findall(r'\b\w+\b', part)
+            if tokens:
+                queryList.extend(tokens)
+
+        return queryList
