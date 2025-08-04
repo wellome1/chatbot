@@ -30,3 +30,5 @@ That’s where boredom comes in — you can theoretically make any plugin you wa
 It’s just putting it into practice, debugging it, making sure the trigger words don't overlap too much, etc etc.
 
 -A high school student who was bored one weekend.
+***
+Current Weather plugin *will* be delayed! I'm not paying for API, and I'm not posting an API key or making my users add one before it can be used, so either add in the API yourself or deal with the delay.

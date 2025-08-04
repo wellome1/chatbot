@@ -30,6 +30,8 @@ class WeatherPlugin(Plugin):
         partJoined = "+".join(queryParts[1:])
         queryPartsCopy = [queryParts[0], partJoined]
 
+        query = " ".join(queryPartsCopy)
+
         # Assume queryParts[0] is the city. Ignore the rest. Trust in the user, and pretty please work.
-        response = requests.get(f"{self.api}{queryPartsCopy[0]}/{queryPartsCopy[1]}?format=3")
+        response = requests.get(f"{self.api}\"{query}\"?format=3")
         print(response.text.strip())
