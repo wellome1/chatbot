@@ -1,0 +1,68 @@
+{
+  "greetings": {
+    "filename": "greetings",
+    "pluginName": "GreetingPlugin",
+    "arguments": {
+      "pluginName": "GreetingPlugin",
+      "pluginDesc": "Greet your users with this simple plugin!",
+      "pluginTags": [
+        "greetings",
+        "simple"
+      ],
+      "triggerWords": [
+        "hi",
+        "hello",
+        "goodday",
+        "g'day"
+      ],
+      "greetings": [
+        "Hello! How can I assist?",
+        "Goodday! How are you doing?",
+        "G'day mate. What's the plan?",
+        "How do you do?"
+      ],
+      "api": "None"
+    }
+  },
+  "quoteGenerator": {
+    "filename": "quotes",
+    "pluginName": "QuotesPlugin",
+    "arguments": {
+      "pluginName": "QuotesPlugin",
+      "pluginDesc": "Generate quotes from a variety of characters. Easy to add to!",
+      "pluginTags": [
+        "quotes",
+        "fun",
+        "dragonball",
+        "characters"
+      ],
+      "triggerWords": [
+        "quote",
+        "quotes",
+        "roshi",
+        "vegeta",
+        "goku",
+        "kakarot"
+      ]
+    }
+  },
+  "weatherPlugin": {
+    "filename": "weather",
+    "pluginName": "WeatherPlugin",
+    "arguments": {
+      "pluginName": "WeatherPlugin",
+      "pluginDesc": "Get your weather with this simple command! Note: you must have queries with | to a city. Incorrect cities may still give a response.",
+      "pluginTags": [
+        "utility",
+        "weather"
+      ],
+      "triggerWords": [
+        "weather",
+        "rain",
+        "rainy",
+        "sun",
+        "sunny"
+      ]
+    }
+  }
+}

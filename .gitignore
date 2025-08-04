@@ -1,0 +1,18 @@
+# created by virtualenv automatically
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyCharm project files
+.idea/
+
+# Virtual environment folders
+venv/
+.venv/
+
+# Mac OS junk files
+.DS_Store
+
+# VSCode (if you ever switch)
+.vscode/
