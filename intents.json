@@ -103,5 +103,23 @@
       ],
       "triggerWords": []
     }
+  },
+  "resumePlugin": {
+    "filename": "resume",
+    "pluginName": "ResumePlugin",
+    "arguments": {
+      "pluginName": "ResumePlugin",
+      "pluginDesc": "I turned a 15 minute task into 2 hours of debugging. Spits out a markdown file. Hopefully a PDF document when I add in Pandoc. Expected to be used with Recall (i.e., recall ResumePlugin)",
+      "api": "",
+      "pluginTags": [
+        "whydidimakethis",
+        "utility",
+        "useful"
+      ],
+      "triggerWords": [
+        "resume",
+        "work"
+      ]
+    }
   }
 }

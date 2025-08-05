@@ -16,3 +16,4 @@ venv/
 
 # VSCode (if you ever switch)
 .vscode/
+/resume.md

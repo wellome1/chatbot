@@ -40,35 +40,39 @@ while True:
             recallActive = False
             print("Recall is now off.")
             continue
-        querySections = query.split("|")
-        savedQuery = querySections[1].strip()
-        query = querySections[0].strip()
+        querySections = [section.strip() for section in query.split("|")]
+        savedQuery = querySections[1:]
+        query = querySections[0]
 
-    if query.startswith("recall"):
-        parts = query.split()
-        if len(parts) >= 2:
-            pluginToRecall = parts[1]
-            if pluginToRecall in Plugin.pluginList:
-                recallPlugin = Plugin.pluginList[pluginToRecall]
-                recallActive = True
-                print(f"Recall is now on for plugin '{pluginToRecall}'.")
-                continue
-            else:
-                print(f"Could not find plugin '{pluginToRecall}'.")
-                continue
-        else:
-            print("Please specify a plugin to recall.")
-            continue
+        if recallActive:
+            query = [query] + savedQuery
 
-    pluginHandleCapability = {}
-    for pluginKey, plugin in Plugin.pluginList.items():
-        handleCapability = plugin.handleCheck(query)
-        if handleCapability > 0:
-            pluginHandleCapability[plugin] = handleCapability
-
-    maxPossibleVal = len(query.split())
-    maxVal = PluginScore()
     if not recallActive:
+        if query.startswith("recall"):
+            parts = query.split()
+            if len(parts) >= 2:
+                pluginToRecall = parts[1]
+                if pluginToRecall in Plugin.pluginList:
+                    recallPlugin = Plugin.pluginList[pluginToRecall]
+                    recallActive = True
+                    print(f"Recall is now on for plugin '{pluginToRecall}'.")
+                    continue
+                else:
+                    print(f"Could not find plugin '{pluginToRecall}'.")
+                    continue
+            else:
+                print("Please specify a plugin to recall.")
+                continue
+
+    if not recallActive:
+        pluginHandleCapability = {}
+        for pluginKey, plugin in Plugin.pluginList.items():
+            handleCapability = plugin.handleCheck(query)
+            if handleCapability > 0:
+                pluginHandleCapability[plugin] = handleCapability
+
+        maxPossibleVal = len(query.split())
+        maxVal = PluginScore()
         for plugin, score in pluginHandleCapability.items():
             if score > maxVal.score:
                 maxVal.score = score
@@ -76,13 +80,13 @@ while True:
                 if score == maxPossibleVal:
                     break
 
-        if isinstance(maxVal.plugin, Plugin):
-            if savedQuery is not None:
-                maxVal.plugin.handle(query=savedQuery, queryHandle=True)
+            if isinstance(maxVal.plugin, Plugin):
+                if savedQuery is not None:
+                    maxVal.plugin.handle(query=savedQuery, queryHandle=True)
+                else:
+                    maxVal.plugin.handle()
             else:
-                maxVal.plugin.handle()
-        else:
-            raise ValueError(f"There is no plugin for query: {query}")
+                raise ValueError(f"There is no plugin for query: {query}")
 
     elif recallActive:
         if isinstance(recallPlugin, Plugin):
