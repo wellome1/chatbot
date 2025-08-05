@@ -66,7 +66,7 @@ class Plugin:
                  api,
                  function=None,
                  overwrite=False,
-                 startBoot = None
+                 startBoot = False
         ):
 
         self.pluginName = pluginName

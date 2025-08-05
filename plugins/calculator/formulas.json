@@ -27,5 +27,18 @@
       "Convert Angle B to Degrees"
     ],
     "command": "sineRuleAngle"
+  },
+  "sineRuleSide": {
+    "triggers": [
+      "sine side",
+      "sin side"
+    ],
+    "steps": [
+      "Covert Angle A ({a}) and ({b}) to Radians.",
+      "Compute sin(A) and sin(B): sin({a}) | sin({b})",
+      "Compute (a * sin(B) / sin(A) → ({c} * sin({b}) / sin({a})",
+      "Simplify."
+    ],
+    "command": "sineRuleSide"
   }
 }

@@ -58,7 +58,7 @@ class CalculatorPlugin(Plugin):
             part = part.strip()
             if "=" in part:
                 key, value = part.split("=")
-                variables[key.strip()] = float(value.strip())
+                variables[key.strip()] = sympy.Rational(value.strip())
 
         for var in ["b", "c"]:
             if variables[var] is None:
@@ -88,7 +88,7 @@ class CalculatorPlugin(Plugin):
 
         match formula:
             case "Quadratic Equation":
-                theDiscriminant = variables["discriminant"]
+                theDiscriminant = variables["theDiscriminant"]
                 sqrtDiscriminant = variables["sqrtDiscriminant"]
                 print(f"Values: a={a}, b={b}, c={c}")
                 stringStart = "x = "
@@ -96,6 +96,11 @@ class CalculatorPlugin(Plugin):
                 aRad = variables["aRad"]
                 print(f"Values: Angle={a}, b={b}, c={c}")
                 stringStart = "θ = "
+            case "Sine Rule (Side)":
+                aRad = variables["aRad"]
+                bRad = variables["bRad"]
+                print(f"Values: Side={c}, Angle A={a}, Angle B={b}")
+                stringStart = "x = "
 
             case _:
                 stringStart = "Value = "
@@ -132,7 +137,7 @@ class CalculatorPlugin(Plugin):
                 "a": a,
                 "b": b,
                 "c": c,
-                "discriminant": theDiscriminant,
+                "theDiscriminant": theDiscriminant,
                 "sqrtDiscriminant": sqrtDiscriminant,
             },
             steps=steps
@@ -140,6 +145,8 @@ class CalculatorPlugin(Plugin):
 
         print(f"x_1 = {stepValues[2].evalf()}")
         print(f"x_2 = {stepValues[3].evalf()}")
+        print("Making it look better...")
+        print(f"x_1 = {stepValues[2]}\nx_2 = {stepValues[3]}")
 
     def sineRuleAngle(self, variables, steps, angleFormat):
         a = variables["a"]
@@ -176,3 +183,43 @@ class CalculatorPlugin(Plugin):
             )
 
         print(f"Computed Angle (θ) = {stepValues[4].evalf()} degrees")
+
+    def sineRuleSide(self, variables, steps, angleFormat):
+        a = variables["a"]
+        b = variables["b"]
+        c = variables["c"]
+
+        aRad = sympy.rad(a)
+        bRad = sympy.rad(b)
+
+        stepValues = {
+            0: f"A_rad = {aRad}, B_rad = {bRad}",
+            1: f"Sin(A) = {sympy.sin(aRad)}, Sin(B) = {sympy.sin(bRad)}",
+            2: (c * sympy.sin(bRad)) / sympy.sin(aRad),
+            3: sympy.simplify((c * sympy.sin(bRad)) / sympy.sin(aRad))
+        }
+
+        variables["aRad"] = aRad
+        variables["bRad"] = bRad
+
+        if angleFormat == "radians":
+            self.goThroughSteps(
+                formula="Sine Rule (Side)",
+                stepValues=stepValues,
+                variables=variables,
+                steps=steps,
+                stepNum=1
+            )
+
+        else:
+            self.goThroughSteps(
+                formula="Sine Rule (Side)",
+                stepValues=stepValues,
+                variables=variables,
+                steps=steps,
+                stepNum=0
+            )
+
+        print(f"Computed side = {stepValues[3].evalf()}")
+        print("Making it look better...")
+        print(f"Side = {stepValues[3]}")

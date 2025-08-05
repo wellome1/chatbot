@@ -1,0 +1,65 @@
+{
+  "Surveillance Devices Act 2007 (NSW)": {
+    "type": "State Legislation",
+    "tags": [
+      "surveillance",
+      "privacy",
+      "individual rights"
+    ],
+    "summary": [],
+    "link": "https://legislation.nsw.gov.au/view/whole/html/inforce/current/act-2007-064"
+  },
+  "Workplace Surveillance Act 2005 (NSW)": {
+    "type": "State Legislation",
+    "tags": [
+      "surveillance",
+      "workplace privacy",
+      "individual rights"
+    ],
+    "summary": [
+      "Regulates usage of surveillance devices in the workplace in New South Wales.",
+      "Requires employers to give 2 weeks notice before surveillance begins.",
+      "For pre-existing surveillance, employees are notified prior to starting work.",
+      "The notice must specify what surveillance is used; Cameras must be visible and have signs attached; Computer surveillance has a secondary notice and must be within the employees contract.",
+      "Surveillance cannot occur in change rooms or bathrooms; on work devices being used outside of work; cannot block internet/emails without notice (unless it menacing, harassment, offensive, spam or may have resulted in unauthorised interference to the employers network)."
+    ],
+    "link": "https://legislation.nsw.gov.au/view/html/inforce/current/act-2005-047"
+  },
+  "Surveillance Legislation Amendment (Identify and Disrupt) Act 2021": {
+    "type": "Amendment",
+    "tags": [
+      "surveillance",
+      "amendment"
+    ],
+    "amendment": "Surveillance Devices Act 2004",
+    "link": "https://www.legislation.gov.au/C2021A00098/asmade/text"
+  },
+  "Surveillance Devices Act 2004": {
+    "type": "Federal Legislation",
+    "tags": [
+      "surveillance",
+      "privacy",
+      "individual rights"
+    ],
+    "summary": [
+      "Establishes procedures for law enforcement officers to obtain warrants relating to surveillance technology, such as:",
+      {
+        "Law enforcement officers": [
+          "Data held in computers",
+          "Data related to criminal investigations",
+          "Data related to safe recovery of children",
+          "Installation and usage of surveillance devices, where it is related to terrorism"
+        ],
+        "AFP / ACC": [
+          "Disruption of data",
+          "Data that is likely to assist in frustrating the commission of relevant offences"
+        ],
+        "Chief officer of AFP / ACC": [
+          "Authorise access of data stored in computers",
+          "Data that will substantially assist in collection of intelligence that relates to criminal networks"
+        ]
+      }
+    ],
+    "link": "https://www.legislation.gov.au/C2004A01387/latest/text"
+  }
+}
