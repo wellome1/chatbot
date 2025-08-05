@@ -101,6 +101,12 @@ class CalculatorPlugin(Plugin):
                 bRad = variables["bRad"]
                 print(f"Values: Side={c}, Angle A={a}, Angle B={b}")
                 stringStart = "x = "
+            case "Cosine Rule (Angle)":
+                print(f"Side A: {a}, Side B: {b}, Side C: {c}.")
+                stringStart = "x = "
+            case "Cosine Rule (Side)":
+                aRad = variables["aRad"]
+
 
             case _:
                 stringStart = "Value = "
@@ -184,13 +190,20 @@ class CalculatorPlugin(Plugin):
 
         print(f"Computed Angle (θ) = {stepValues[4].evalf()} degrees")
 
-    def sineRuleSide(self, variables, steps, angleFormat):
+    def sineRuleSide(self, variables, steps, angleFormat="radians"):
         a = variables["a"]
         b = variables["b"]
         c = variables["c"]
 
-        aRad = sympy.rad(a)
-        bRad = sympy.rad(b)
+        if angleFormat != "radians":
+            aRad = sympy.rad(a)
+            bRad = sympy.rad(b)
+        elif angleFormat == "radians":
+            aRad = a
+            bRad = b
+        else:
+            aRad = sympy.asin(a)
+            bRad = sympy.asin(b)
 
         stepValues = {
             0: f"A_rad = {aRad}, B_rad = {bRad}",
@@ -223,3 +236,80 @@ class CalculatorPlugin(Plugin):
         print(f"Computed side = {stepValues[3].evalf()}")
         print("Making it look better...")
         print(f"Side = {stepValues[3]}")
+
+    def cosineRuleAngle(self, variables, steps, angleFormat):
+        a = variables["a"]
+        b = variables["b"]
+        c = variables["c"]
+
+        numerator = sympy.simplify((b**2)+(c**2)-(a**2))
+        denominator = sympy.simplify(2*b*c)
+
+        stepValues = {
+            0: f"({b}^2+{c}^2-{a}^2)/(2({b})({c})) =",
+            1: f"({b}^2+{c}^2-{a}^2) = {numerator}",
+            2: f"(2({b})({c})) = {denominator}",
+            3: sympy.simplify(numerator/denominator),
+            4: sympy.acos(numerator/denominator),
+        }
+
+        self.goThroughSteps(
+            formula="Cosine Rule (Angle)",
+            stepValues=stepValues,
+            variables=variables,
+            steps=steps,
+            stepNum=0
+        )
+
+        if angleFormat == "degrees":
+            print("Resulting angle in degrees...")
+            print(sympy.degree(sympy.acos(numerator / denominator)))
+
+        if angleFormat != "degrees": print(f"Computed angle (Radians) = {stepValues[4].evalf()}")
+        elif angleFormat == "degrees": print(f"Computed angle (Degrees) = {sympy.degree(sympy.acos(numerator / denominator))}")
+
+        if angleFormat == "radians":
+            print("Making it look better...")
+            print(f"Computed angle (Radians) = {stepValues[4]}")
+
+    def cosineRuleSide(self, variables, steps, angleFormat="radians"):
+        a = variables["a"]
+        b = variables["b"]
+        c = variables["c"]
+
+        if angleFormat != "radians":
+            aRad = sympy.rad(a)
+        if angleFormat == "radians":
+            aRad = a
+        else:
+            aRad = sympy.rad(a)
+
+        stepValues = {
+            0: f"A_rad: {aRad}",
+            1: f"cos(C): cos({aRad}): {sympy.cos(aRad)}",
+            2: f"a^2 = {b}^2 + {c}^2 -2({b})({c})cos({a}) = {b**2} + {c**2} - 2({b*c})({sympy.cos(aRad)})",
+            3: f"{b**2} + {c**2} - 2({b*c})({sympy.cos(aRad)}) = {sympy.simplify((b**2)+(c**2)-(2*(b*c)*(sympy.cos(aRad))))}",
+            4: f"sqrt({sympy.simplify((b ** 2) + (c ** 2) - (2 * (b * c) * (sympy.cos(aRad))))})={sympy.sqrt(sympy.simplify((b**2)+(c**2)-(2*(b*c)*(sympy.cos(aRad)))))}."
+        }
+
+        if angleFormat == "degrees":
+            self.goThroughSteps(
+                formula="Cosine Rule (Side)",
+                stepValues=stepValues,
+                variables=variables,
+                steps=steps,
+                stepNum=0
+            )
+
+        if angleFormat == "radians":
+            self.goThroughSteps(
+                formula="Cosine Rule (Side)",
+                stepValues=stepValues,
+                variables=variables,
+                steps=steps,
+                stepNum=1
+            )
+
+        print(f"Computed side = {sympy.sqrt(sympy.simplify((b**2)+(c**2)-(2*(b*c)*(sympy.cos(aRad))))).evalf()}")
+        print("Making it look better...")
+        print(f"Side = {sympy.sqrt(sympy.simplify((b**2)+(c**2)-(2*(b*c)*(sympy.cos(aRad)))))}")

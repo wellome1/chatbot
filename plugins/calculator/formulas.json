@@ -40,5 +40,32 @@
       "Simplify."
     ],
     "command": "sineRuleSide"
+  },
+  "cosineRuleAngle": {
+    "triggers": [
+      "cosine angle",
+      "cos angle"
+    ],
+    "steps": [
+      "Fill in all known information, squaring the top.",
+      "Solve numerator.",
+      "Solve denominator.",
+      "Angle (Radians) from arccos."
+    ],
+    "command": "cosineRuleAngle"
+  },
+  "cosineRuleSide": {
+    "triggers": [
+      "cosine side",
+      "cos side"
+    ],
+    "steps": [
+      "Convert Angle C ({a}) to Radians.",
+      "Compute cos(C): cos({C})",
+      "Compute a^2 = b^2 + c^2 - 2bccos(C): a^2 = {b}^2 + {c}^2 -2({b})({c})cos({a})",
+      "Simplify to get a^2.",
+      "Square root the answer to get a."
+    ],
+    "command": "cosineRuleSide"
   }
 }

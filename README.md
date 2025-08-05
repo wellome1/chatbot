@@ -34,3 +34,9 @@ It’s just putting it into practice, debugging it, making sure the trigger word
 Current Weather plugin *will* be delayed! I'm not paying for API, and I'm not posting an API key or making my users add one before it can be used, so either add in the API yourself or deal with the delay.
 
 The resume plugin WILL crash. It's a... "intended feature". I'm too tired to fix it, I've spent 4 hours just trying to get it to generate SOMETHING.
+***
+# Theoretical Roadmap
+1. Finish off Calculator Plugin
+2. Finish off the Legal Plugin
+3. Remake old plugins from scratch using things I've realised can be done (i.e., remake Quotes to use matchcase instead of doing everything inside one command)
+4. Add comments (maybe, I don't like doing many comments)
