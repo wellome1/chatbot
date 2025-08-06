@@ -19,13 +19,50 @@ class Constant(Atom):
     def differentiate(self):
         return Constant(0)
 
+    def simplify(self):
+        return self
+
 class Variable(Atom):
-    def __init__(self,value):
+    variableContext = {}
+
+    def __init__(self,coefficient:(int,float,Math)=1,value="x"):
         super().__init__(value)
+        if isinstance(coefficient, (int,float)):
+            self.coefficient = Constant(coefficient)
+        elif isinstance(coefficient, Math):
+            self.coefficient = coefficient
+        else:
+            self.coefficient = Constant(1)
 
     def differentiate(self):
-        # Assume no power if it got here.
-        return Constant(1)
+        # Assumes that there's no power attached.
+        return Constant(self.coefficient.value)
+
+    @staticmethod
+    def addContext(variable, value):
+        if isinstance(value, (int, float)):
+            value = Constant(value)
+
+        Variable.variableContext[variable] = value
+
+    @staticmethod
+    def getContext(variable):
+        return Variable.variableContext[variable]
+
+    def simplify(self, context=None):
+        if context is None:
+            context = Variable.getContext(self.value)
+        elif context is not None and self.value not in Variable.variableContext:
+            Variable.addContext(self.value, context)
+
+        substitution = context
+
+        if substitution is not None:
+            if isinstance(substitution, (int, float)): substitution = Constant(substitution)
+
+            return Multiplication(self.coefficient, substitution).simplify()
+        else:
+            return self
 
 # MathTerms
 class MathTerms(Atom):
@@ -45,12 +82,18 @@ class Pi(MathTerms):
     def __str__(self):
         return "π"
 
+    def simplify(self):
+        return self
+
 class E(MathTerms):
     def __init__(self):
         super().__init__(2.71828)
 
     def __str__(self):
         return "e"
+
+    def simplify(self):
+        return self
 
 # Binary Operations
 class BinaryOperator(Math):
@@ -59,7 +102,10 @@ class BinaryOperator(Math):
         self.right = b
         self.operator = operator
 
-    def makeConstant(self):
+    def makeConstant(self, context=None):
+        self.left = self.left.simplify(context)
+        self.right = self.right.simplify(context)
+
         if isinstance(self.left, Constant) and isinstance(self.right, Constant):
             match self.operator:
                 case "+":
@@ -96,6 +142,29 @@ class Addition(BinaryOperator):
 
         return Addition(left, right)
 
+    def simplify(self, context=None):
+        self.left = self.left.simplify(context)
+        self.right = self.right.simplify(context)
+
+        if isinstance(self.left, Variable) and isinstance(self.right, Variable):
+            if self.left.value == self.right.value:
+                newCoeff = Addition(self.left.coefficient, self.right.coefficient).simplify(context)
+                return Variable(coefficient=newCoeff, value=self.left.value)
+
+        if isinstance(self.left, Negation) and not isinstance(self.right, Negation):
+            return Subtraction(self.left.operand, self.right)
+
+        if isinstance(self.right, Negation) and not isinstance(self.left, Negation):
+            return Subtraction(self.left, self.right.operand)
+
+        if isinstance(self.left, Negation) and isinstance(self.right, Negation):
+            return Addition(self.left.operand, self.right.operand)
+
+        makeConstant = self.makeConstant()
+        if makeConstant: return makeConstant
+
+        return self
+
 class Subtraction(BinaryOperator):
     def __init__(self,a,b):
         super().__init__(a,b, "-")
@@ -111,6 +180,21 @@ class Subtraction(BinaryOperator):
         right = right.differentiate()
 
         return Subtraction(left, right)
+
+    def simplify(self, context=None):
+        self.left = self.left.simplify(context)
+        self.right = self.right.simplify(context)
+
+        if isinstance(self.left, Variable) and isinstance(self.right, Variable):
+            return Variable(coefficient=Subtraction(self.left.coefficient, self.right.coefficient).simplify(context), value=self.left.value)
+
+        if isinstance(self.right, Negation):
+            return Addition(self.left, self.right.operand).simplify(context)
+
+        makeConstant = self.makeConstant()
+        if makeConstant: return makeConstant
+
+        return self
 
 class Multiplication(BinaryOperator):
     def __init__(self,a,b):
@@ -133,6 +217,21 @@ class Multiplication(BinaryOperator):
             return Multiplication(Constant(g.value), f.differentiate())
 
         return Addition(Multiplication(f,g.differentiate()), Multiplication(g,f.differentiate()))
+
+    def simplify(self, context=None):
+        self.left = self.left.simplify()
+        self.right = self.right.simplify()
+
+        if isinstance(self.left, Variable) and isinstance(self.right, Variable):
+            return Power(Variable(Multiplication(self.left.coefficient, self.right.coefficient), self.left.value), Constant(2))
+
+        if isinstance(self.left, Power) and isinstance(self.right, Power):
+            return Power()
+
+        makeConstant = self.makeConstant()
+        if makeConstant: return makeConstant
+
+        return self
 
 class Division(BinaryOperator):
     def __init__(self,a,b):
@@ -711,7 +810,7 @@ class PrettyPrinter:
         else:
             return str(node)
 
-x = Variable("x")
+x = Variable(value="x")
 expr = Addition(
     Addition(
         Multiplication(Constant(3), Power(x, Constant(4))),
