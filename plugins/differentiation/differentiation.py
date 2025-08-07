@@ -226,7 +226,10 @@ class Multiplication(BinaryOperator):
             return Power(Variable(Multiplication(self.left.coefficient, self.right.coefficient), self.left.value), Constant(2))
 
         if isinstance(self.left, Power) and isinstance(self.right, Power):
-            return Power()
+            return Power(
+                Multiplication(self.left.left, self.right.left),
+                Addition(self.left.right, self.right.right)
+            )
 
         makeConstant = self.makeConstant()
         if makeConstant: return makeConstant
