@@ -1,42 +1,30 @@
-Read pluginBase.py's comments if you want to know the basics of how to make your own plugins.
+Update! `differentiation.py` is now its own project. This one is paused until I'm ready to put `differentiation.py` into it.
 ***
-But, a nice little summary:
-1. Know what you're trying to do.
-2. Make a basic class.
-3. Put the arguments into intents.json (main.py will automatically import it and make a class, don't worry).
-4. Write what you want your plugin to do inside handle().
+# Roadmap
+1. Finish `differentiation.py`
+   1. `class MathLaw`
+      1. `class IndexLaw(MathLaw)`
+      2. `class MultiInstance(MathLaw)`
+   2. Every class gets their own `.simplify()` command, just to make it easier on me.
+   3. Catch all edge cases.
+   4. N-ary for `Multiplication`/`Addition`/`Subtraction`.
+   5. `Power` rework, change from just doing $b^a = b*b*b...$ to doing $b^a = e^{aln(b)}$
+   6. Add in comments for everything. I suck at comments. This will help document it.
+   7. Don't start work on the query->Math objects yet.
+2. Rework ALL my old plugins. And switch from PyCharm to VS Code (for when I make this closed source).
+   1. `quotes.py` is in desperate need of a rework.
+   2. `resume.py` needs to be fixed to stop crashing & to export it as a .pdf instead of .md (with correct formatting)
+   3. `calculator.py` needs to be merged into `differentiation.py`.
+   4. `pluginBase.py` is probably due for a rework too, but I might hold off until I've finished the next step.
+3. Make my own tokeniser
+   1. I don't like relying on imported modules.
+   2. If I want to be able to call this a Chatbot, I need to be able to parse tokens and understand what it means.
+   3. This will probably use my `differentiation.py` plugin for this (I'll probably call it `math.py` when I get to this step).
+   4. It'll make sure I have a proper math module that I understand completely for calculating what the best response is.
+4. Incorporate this into `differentiation.py` and `pluginBase.py` for:
+   1. `differentiation.py`: So it can parse user text into Math objects (i.e., $3x^2$ into `Power(Variable(coefficient=Constant(3), value="x"), Constant(2))`)
+   2. `pluginBase.py`: So it's easier to use context AND user input to make decisions on what gets done.
+5. At this point, I'll probably close source the project and consider switching from Python. What can I say? I like money. I'll leave whatever the latest open source version there is out (just without my BIG plugins like `differentiation.py`).
 ***
-If you want to have multiple commands in a single plugin, you can use the "query" argument, which will be automatically passed through if you put it there, to do a match-case to figure out what command to do.
-
-Example:
-```python
-match query:
-    case "generate": ...
-    case "check": ...
-```
-You get the point.
-
-I’ve not done this yet, because I’m not bothered.
-But it’s a way to make your plugin bigger and easier to read than what I did in /plugins/quotes/quotes.py — generateQuote().
-
-Have fun.
-There’s a few issues that’ll start appearing once you get to ~50 plugins, but I have no intentions of getting there (yet), so you can fix it yourself.
-***
-
-Can it run on its own? Yeah.
-
-But can it do much on its own? Not really. It can only pick quotes you give it and say hi.
-That’s where boredom comes in — you can theoretically make any plugin you want.
-It’s just putting it into practice, debugging it, making sure the trigger words don't overlap too much, etc etc.
-
--A high school student who was bored one weekend.
-***
-Current Weather plugin *will* be delayed! I'm not paying for API, and I'm not posting an API key or making my users add one before it can be used, so either add in the API yourself or deal with the delay.
-
-The resume plugin WILL crash. It's a... "intended feature". I'm too tired to fix it, I've spent 4 hours just trying to get it to generate SOMETHING.
-***
-# Theoretical Roadmap
-1. Finish off Calculator Plugin
-2. Finish off the Legal Plugin
-3. Remake old plugins from scratch using things I've realised can be done (i.e., remake Quotes to use matchcase instead of doing everything inside one command)
-4. Add comments (maybe, I don't like doing many comments)
+# Documentation
+I'll add in a lot of it when I get around to it. Not sure right now, all of it exists currently in `pluginBase.py`.
